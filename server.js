@@ -12,11 +12,14 @@ db.defaults({ books: [] })
 
 const app = express();
 
+app.set("views", "./views");
+app.set("view engine", "pug");
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/books', function(req, res) {
-  res.render('books', {
+  res.render('book', {
     books: db.get('books').value()
   });
 });
