@@ -3,6 +3,7 @@ var bodyParser = require('body-parser')
 
 var userRoute = require('./routes/user.route.js');
 var bookRoute = require('./routes/book.route.js');
+var transactionRoute = require('./routes/transaction.route.js');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 
 app.use('/users', userRoute);
 app.use('/books', bookRoute);
+app.use('/transactions', transactionRoute);
 
 // listen for requests :)
 app.listen(process.env.PORT, () => {

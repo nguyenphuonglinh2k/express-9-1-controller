@@ -21,5 +21,12 @@
       "id": "1",
       "name": "Linh"
     }
+  ],
+  "transactions": [
+    {
+      "id": "1",
+      "userId": "1",
+      "bookId": "1"
+    }
   ]
 }
