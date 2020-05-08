@@ -1,21 +1,20 @@
 const express = require('express');
-const low = require('lowdb');
+var db = require('../db');
 const shortid = require('shortid');
-var bodyParser = require('body-parser');
 
-var route = express.Router();
+var router = express.Router();
 
-app.get('/', function(req, res) {
+router.get('/', function(req, res) {
   res.render('users/index', {
     users: db.get('users').value()
   });
 });
 
-app.get('/add', function(req, res) {
+router.get('/add', function(req, res) {
   res.render('users/add');
 });
 
-app.get('/:id/delete', function(req, res) {
+router.get('/:id/delete', function(req, res) {
   var id = req.params.id;
   var item = db.get('users').find({ id: id }).value();
   var index = db.get('users').indexOf(item).value();
@@ -25,14 +24,14 @@ app.get('/:id/delete', function(req, res) {
   res.redirect('back');
 });
 
-app.get('/users/:id/update', function(req, res) {
+router.get('/users/:id/update', function(req, res) {
   var id = req.params.id;
   res.render('users/update', {
     id: id
   });
 });
 
-app.post('/:id/update', function(req, res) {
+router.post('/:id/update', function(req, res) {
   var id = req.params.id;
   var name = req.body.newName;
   db.get('users').find({ id: id }).value().name = name;
@@ -40,4 +39,16 @@ app.post('/:id/update', function(req, res) {
   res.redirect('/users');
 });
 
-module.exports = route;
+router.post('/add', function(req, res) {
+  var id = shortid.generate();
+  var name = req.body.name;
+  
+  db.get('users').push({ 
+    id: id, 
+    name: name
+  }).write();
+  
+  res.redirect('/users');
+});
+
+module.exports = router;

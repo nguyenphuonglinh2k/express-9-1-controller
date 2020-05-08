@@ -68,17 +68,7 @@ app.post('/books/add', function(req, res) {
   res.redirect('/books');
 });
 
-app.post('/users/add', function(req, res) {
-  var id = shortid.generate();
-  var name = req.body.name;
-  
-  db.get('users').push({ 
-    id: id, 
-    name: name
-  }).write();
-  
-  res.redirect('/users');
-});
+
 
 app.post('/books/:id/update', function(req, res) {
   var id = req.params.id;
