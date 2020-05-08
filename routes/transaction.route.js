@@ -9,4 +9,8 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/create', function(req, res) {
+  res.render('transaction/create');
+});
+
 module.exports = router;
