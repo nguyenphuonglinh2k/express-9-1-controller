@@ -30,7 +30,10 @@ app.get('/books/add', function(req, res) {
   res.render('add');
 });
 
-app.get('books/update' ,)
+app.get('/books/:id/update', function(req, res) {
+  var i
+  res.render('update');
+});
 
 app.post('/books/add', function(req, res) {
   var id = shortid.generate();
@@ -45,7 +48,10 @@ app.post('/books/add', function(req, res) {
   res.redirect('/books');
 });
 
-
+app.post('/books/update', function(req, res) {
+  var title = req.body.newTitle;
+  db.get('books').find
+});
 
 // listen for requests :)
 app.listen(process.env.PORT, () => {
