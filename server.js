@@ -1,25 +1,24 @@
-// server.js
-// where your node app starts
-
-// we've started you off with Express (https://expressjs.com/)
-// but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require('express');
+const low = require('lowdb');
+var bodyParser = require('body-parser')
+const FileSync = require('lowdb/adapters/FileSync');
+const adapter = new FileSync('db.json');
+
+const db = low(adapter);
+
+// Set some defaults (required if your JSON file is empty)
+db.defaults({ books: [] })
+  .write()
+
 const app = express();
 
-// https://expressjs.com/en/starter/basic-routing.html
-app.get('/', (request, response) => {
-  response.send('I love CodersX');
-});
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/todos', function(req, res) {
-  res.send(`
-    <ul>
-      <li>Đi chợ</li>
-      <li>Nấu cơm</li>
-      <li>Rửa bát</li>
-      <li>Học code tại CodersX</li>
-    </ul>
-  `);
+app.get('/books', function(req, res) {
+  res.render('books', {
+    books: db.get('books').value()
+  });
 });
 
 // listen for requests :)
