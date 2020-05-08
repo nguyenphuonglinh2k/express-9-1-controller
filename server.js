@@ -3,6 +3,8 @@ const low = require('lowdb');
 const shortid = require('shortid');
 var bodyParser = require('body-parser')
 
+var userRoute =require('./routes/user.route.js');
+
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 
@@ -26,19 +28,11 @@ app.get('/books', function(req, res) {
   });
 });
 
-app.get('/users', function(req, res) {
-  res.render('users/index', {
-    users: db.get('users').value()
-  });
-});
-
 app.get('/books/add', function(req, res) {
   res.render('add');
 });
 
-app.get('/users/add', function(req, res) {
-  res.render('users/add');
-});
+
 
 app.get('/books/:id/delete', function(req, res) {
   var id = req.params.id;
@@ -50,15 +44,7 @@ app.get('/books/:id/delete', function(req, res) {
   res.redirect('back');
 });
 
-app.get('/users/:id/delete', function(req, res) {
-  var id = req.params.id;
-  var item = db.get('users').find({ id: id }).value();
-  var index = db.get('users').indexOf(item).value();
-  
-  db.get('users').splice(index, 1).write();
-  
-  res.redirect('back');
-});
+
 
 app.get('/books/:id/update', function(req, res) {
   var id = req.params.id;
@@ -67,12 +53,7 @@ app.get('/books/:id/update', function(req, res) {
   });
 });
 
-app.get('/users/:id/update', function(req, res) {
-  var id = req.params.id;
-  res.render('users/update', {
-    id: id
-  });
-});
+
 
 app.post('/books/add', function(req, res) {
   var id = shortid.generate();
@@ -106,6 +87,8 @@ app.post('/books/:id/update', function(req, res) {
   
   res.redirect('/books');
 });
+
+app.use('/users', userRoute);
 
 // listen for requests :)
 app.listen(process.env.PORT, () => {
