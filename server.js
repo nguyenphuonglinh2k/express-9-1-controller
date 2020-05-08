@@ -31,8 +31,10 @@ app.get('/books/add', function(req, res) {
 });
 
 app.get('/books/:id/update', function(req, res) {
-  var i
-  res.render('update');
+  var id = req.params.id;
+  res.render('update', {
+    id: id
+  });
 });
 
 app.post('/books/add', function(req, res) {
@@ -48,9 +50,12 @@ app.post('/books/add', function(req, res) {
   res.redirect('/books');
 });
 
-app.post('/books/update', function(req, res) {
+app.post('/books/:id/update', function(req, res) {
+  var id = req.params.id;
   var title = req.body.newTitle;
-  db.get('books').find
+  db.get('books').find({ id: id }).value().title = title;
+  
+  res.redirect('/books');
 });
 
 // listen for requests :)
