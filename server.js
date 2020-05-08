@@ -9,7 +9,7 @@ const adapter = new FileSync('db.json');
 const db = low(adapter);
 
 // Set some defaults (required if your JSON file is empty)
-db.defaults({ books: [] })
+db.defaults({ books: [], users: [] })
   .write()
 
 const app = express();
@@ -26,13 +26,50 @@ app.get('/books', function(req, res) {
   });
 });
 
+app.get('/users', function(req, res) {
+  res.render('users/index', {
+    users: db.get('users').value()
+  });
+});
+
 app.get('/books/add', function(req, res) {
   res.render('add');
+});
+
+app.get('/users/add', function(req, res) {
+  res.render('users/add');
+});
+
+app.get('/books/:id/delete', function(req, res) {
+  var id = req.params.id;
+  var item = db.get('books').find({ id: id }).value();
+  var index = db.get('books').indexOf(item).value();
+  
+  db.get('books').splice(index, 1).write();
+  
+  res.redirect('back');
+});
+
+app.get('/users/:id/delete', function(req, res) {
+  var id = req.params.id;
+  var item = db.get('users').find({ id: id }).value();
+  var index = db.get('users').indexOf(item).value();
+  
+  db.get('users').splice(index, 1).write();
+  
+  res.redirect('back');
 });
 
 app.get('/books/:id/update', function(req, res) {
   var id = req.params.id;
   res.render('update', {
+    id: id
+  });
+});
+
+app.get('/users/:id/update', function(req, res) {
+  var id = req.params.id;
+  res.render('users/update', {
     id: id
   });
 });
@@ -48,6 +85,18 @@ app.post('/books/add', function(req, res) {
   }).write();
   
   res.redirect('/books');
+});
+
+app.post('/users/add', function(req, res) {
+  var id = shortid.generate();
+  var name = req.body.name;
+  
+  db.get('users').push({ 
+    id: id, 
+    name: name
+  }).write();
+  
+  res.redirect('/users');
 });
 
 app.post('/books/:id/update', function(req, res) {
